@@ -141,7 +141,7 @@
 ############ In momentum basis
 
 import numpy as np
-
+######## Electronic Hamiltonian formation
 # Define parameters
 num_sites = 4  # Number of lattice sites
 num_k = num_sites  # Number of electron momentum states (equal to num_sites for periodic boundary)
@@ -270,5 +270,5 @@ for alpha in range(num_branches):  # Loop over phonon branches
                 )
 
 # Print the resulting Hamiltonian
-print("Full Hamiltonian in Momentum Basis:\n", H_k)
+print("Full electronic Hamiltonian in Momentum Basis:\n", H_k)
 
