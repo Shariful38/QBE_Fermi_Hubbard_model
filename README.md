@@ -3,34 +3,34 @@
 
 ### Proposal for code directory organization structure:
 
-- QBE
+- QBE/
 
-    - lattice_hamiltonian_generation
+    - lattice_hamiltonian_generation/
 
         - generate_bosonic_hamiltonians.py
         - generate_fermionic_hamiltonians.py
         - generate_hybrid_hamiltonians.py
 
-    - mean_field_solvers
+    - mean_field_solvers/
 
         - boson_mean_field_solvers.py
         - fermion_mean_field_solvers.py
         - hybrid_mean_field_solvers.py
 
-    - fragmentation
+    - fragmentation/
 
         - generate_fermionic_fragments.py
         - generate_bosonic_fragments.py
         - generate_hybrid_fragments.py
         - generate_embedded_hamiltonians.py
 
-    - circuits
+    - circuits/
 
         - generate_fermionic_circuits.py
         - generate_boson_circuits.py
         - generate_hybrid_circuits.py
 
-    - eigensolvers
+    - eigensolvers/
 
         - fermion_eigensolvers.py
         - boson_eigensolvers.py
@@ -42,14 +42,14 @@
         - fermion_qbe_solvers.py
         - hybrid_qbe_solvers.py
 
-- tests
+- tests/
 
     - bosonic_tests.py
     - fermionic_tests.py
     - hybrid_tests.py
 
-- examples
+- examples/
 
-    - bosonic_examples
-    - fermionic_tests
-    - hybrid_tests
+    - bosonic_examples/
+    - fermionic_tests/
+    - hybrid_tests/
