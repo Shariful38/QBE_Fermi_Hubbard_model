@@ -129,3 +129,74 @@ print("Final expectation values (n_up):", np.real(np.diag(new_psi_up @ new_psi_u
 print("Final expectation values (n_down):", np.real(np.diag(new_psi_down @ new_psi_down.T.conj())))
 print("Eigenvalues (spin-up):", eigenvalues_up)
 print("Eigenvalues (spin-down):", eigenvalues_down)
+
+
+
+##### electron-phonon coupling term
+
+## using coherent state to calculate expectation value
+
+import qutip as qt
+import numpy as np
+
+# Define parameters
+N = 5  # Truncated Hilbert space per site (phonons)
+L = 4  # Number of lattice sites
+V = L  # Volume factor, assuming periodic boundary conditions
+
+# Define discrete momentum indices
+k_indices = range(L)
+q_indices = range(L)
+
+# Define electron creation and annihilation operators in real space
+c_list = [qt.tensor([qt.destroy(2) if i == j else qt.qeye(2) for i in range(L)]) for j in range(L)]
+c_dag_list = [c.dag() for c in c_list]
+
+# Define phonon annihilation operators in real space
+b_list = [qt.tensor([qt.destroy(N) if i == j else qt.qeye(N) for i in range(L)]) for j in range(L)]
+b_dag_list = [b.dag() for b in b_list]
+
+# Fourier transform to momentum space for electron operators
+c_k = [(1/np.sqrt(L)) * sum(np.exp(-1j * (2 * np.pi * k_idx / L) * j) * c_list[j] for j in range(L)) for k_idx in k_indices]
+c_k_dag = [c.dag() for c in c_k]
+
+# Fourier transform to momentum space for phonon operators
+b_q = [(1/np.sqrt(L)) * sum(np.exp(-1j * (2 * np.pi * q_idx / L) * j) * b_list[j] for j in range(L)) for q_idx in q_indices]
+b_q_dag = [b.dag() for b in b_q]
+
+# Define electron-phonon coupling function g_lambda_kq
+g_lambda_kq = lambda k_idx, q_idx: np.exp(-((2 * np.pi * k_idx / L) - (2 * np.pi * q_idx / L))**2)  # Example function
+
+# Create a coherent state instead of number states
+alpha = 2.0  # Displacement parameter
+coherent_state = qt.coherent(N, alpha)  # Coherent state
+bosonic_state_real = qt.tensor([coherent_state for _ in range(L)])
+
+# Compute expectation value in real space
+boson_sum_real = sum(b_list[j] + b_dag_list[-j] for j in range(L))
+
+
+#expectation_value_real = qt.expect(boson_sum_real, bosonic_state_real)
+expectation_value_real = qt.expect(boson_sum_real, bosonic_state_real)
+
+print("Expectation Value in Real Space:", expectation_value_real)
+
+
+expectation_value_momentum = (1 / np.sqrt(L)) * sum(
+        np.exp(-1j * 2 * np.pi * q_idx / L) * expectation_value_real
+        for q_idx in range(L))
+
+print("Expectation Value in momentum Space:", expectation_value_momentum)
+
+# Define electron-phonon interaction Hamiltonian H_eph
+H_eph = sum(
+    (1/V) * g_lambda_kq(k_idx, q_idx) / 2 * (
+        c_k_dag[(k_idx + q_idx) % L] * c_k[k_idx] * expectation_value_momentum
+    )
+    for k_idx in k_indices for q_idx in q_indices
+)
+
+# Print the corrected Hamiltonian
+print("Corrected Electron-Phonon Hamiltonian H_eph:\n", H_eph)
+
+
