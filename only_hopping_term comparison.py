@@ -30,6 +30,7 @@ rhf_hub.kernel()
 import numpy as np
 import scipy.linalg
 import matplotlib.pyplot as plt
+from numpy.linalg import eig, eigh
 
 ########## Electron Hamiltonian Formation
 # Define convergence parameters
@@ -107,8 +108,10 @@ while True:
     E_curr = np.trace(slater_matrix.T.conj() @ H_total @ slater_matrix)
       # Store energy for plotting
     energy_values.append(E_curr)
+    numpy_diag_values = eigh(H_total)
     # Print the energy at each iteration
     print(f"our code Iteration {iteration + 1}: Energy = {E_curr}")
+    print(f'Our code (with eigvals computer via numpy): {numpy_diag_values[0][0]}')
 
     # Convergence check
     if abs(E_curr - E_prev) < delta_threshold:
